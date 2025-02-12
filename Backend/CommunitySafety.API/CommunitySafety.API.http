@@ -1,0 +1,6 @@
+@CommunitySafety.API_HostAddress = http://localhost:5239
+
+GET {{CommunitySafety.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

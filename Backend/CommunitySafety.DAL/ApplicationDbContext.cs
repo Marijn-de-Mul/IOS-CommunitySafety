@@ -9,5 +9,13 @@ namespace CommunitySafety.DAL
 
         public DbSet<Alert> Alerts { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<OTPRequest> OTPRequests { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Alert>()
+                .OwnsOne(a => a.Location);
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

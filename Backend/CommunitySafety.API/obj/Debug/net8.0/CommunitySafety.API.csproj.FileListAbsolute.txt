@@ -1,6 +1,5 @@
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\bin\Debug\net8.0\appsettings.Development.json
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\bin\Debug\net8.0\appsettings.json
-E:\IOS-CommunitySafety\Backend\CommunitySafety.API\bin\Debug\net8.0\CommunitySafety.API.staticwebassets.endpoints.json
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\bin\Debug\net8.0\CommunitySafety.API.exe
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\bin\Debug\net8.0\CommunitySafety.API.deps.json
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\bin\Debug\net8.0\CommunitySafety.API.runtimeconfig.json
@@ -127,9 +126,7 @@ E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\CommunitySaf
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\scopedcss\bundle\CommunitySafety.API.styles.css
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets.build.json
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets.development.json
-E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets\msbuild.CommunitySafety.API.Microsoft.AspNetCore.StaticWebAssets.props
-E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets\msbuild.CommunitySafety.API.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets\msbuild.build.CommunitySafety.API.props
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.CommunitySafety.API.props
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.CommunitySafety.API.props
@@ -140,3 +137,6 @@ E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\refint\Commu
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\CommunitySafety.API.pdb
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\CommunitySafety.API.genruntimeconfig.cache
 E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\ref\CommunitySafety.API.dll
+E:\IOS-CommunitySafety\Backend\CommunitySafety.API\bin\Debug\net8.0\CommunitySafety.API.staticwebassets.endpoints.json
+E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+E:\IOS-CommunitySafety\Backend\CommunitySafety.API\obj\Debug\net8.0\staticwebassets\msbuild.CommunitySafety.API.Microsoft.AspNetCore.StaticWebAssetEndpoints.props

@@ -1,6 +1,12 @@
-﻿namespace CommunitySafety.SAL.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CommunitySafety.SAL.Models;
 
 public class User { 
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
     public string UserName { get; set; }
     public string FirstName { get; set; } 
     public string? MiddleName { get; set; }
@@ -8,5 +14,6 @@ public class User {
     public string Email { get; set; } 
     public string PhoneNumber { get; set; } 
     public string Password { get; set; } 
+    [NotMapped]
     public Coordinates Location { get; set; }
 }

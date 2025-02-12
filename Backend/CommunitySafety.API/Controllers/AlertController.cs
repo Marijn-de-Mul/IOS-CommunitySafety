@@ -18,7 +18,7 @@ namespace CommunitySafety.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PushAlert([FromHeader] string token, [FromBody] AlertRequest alert)
+        public async Task<IActionResult> PushAlert([FromBody] AlertRequest alert)
         {
             await _alertService.SendAlert(alert);
             return Ok();

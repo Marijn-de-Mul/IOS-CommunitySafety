@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CommunitySafety.DAL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8313cc04a46a17d9d3b4042cdf5220f786d50acb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+80b9dec8d1fcf867de34a2ea33f8f7b1897e6c7a")]
 [assembly: System.Reflection.AssemblyProductAttribute("CommunitySafety.DAL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CommunitySafety.DAL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

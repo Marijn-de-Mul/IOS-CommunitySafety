@@ -1,0 +1,15 @@
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\bin\Debug\net8.0\CommunitySafety.SAL.deps.json
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\bin\Debug\net8.0\CommunitySafety.SAL.runtimeconfig.json
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\bin\Debug\net8.0\CommunitySafety.SAL.dll
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\bin\Debug\net8.0\CommunitySafety.SAL.pdb
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\CommunitySafety.SAL.csproj.AssemblyReference.cache
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\CommunitySafety.SAL.GeneratedMSBuildEditorConfig.editorconfig
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\CommunitySafety.SAL.AssemblyInfoInputs.cache
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\CommunitySafety.SAL.AssemblyInfo.cs
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\CommunitySafety.SAL.csproj.CoreCompileInputs.cache
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\CommunitySafety.SAL.sourcelink.json
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\CommunitySafety.SAL.dll
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\refint\CommunitySafety.SAL.dll
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\CommunitySafety.SAL.pdb
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\CommunitySafety.SAL.genruntimeconfig.cache
+E:\IOS-CommunitySafety\Backend\CommunitySafety.SAL\obj\Debug\net8.0\ref\CommunitySafety.SAL.dll

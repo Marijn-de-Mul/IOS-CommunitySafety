@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "IdaRQvCgSiwqZVmSor4Vxcj7dNFrFrudqSXrvn5+l64=",
+  "Source": "CommunitySafety.API",
+  "BasePath": "_content/CommunitySafety.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

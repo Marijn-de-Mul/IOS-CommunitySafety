@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CommunitySafety.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45b791c3c2b1952afea00757e6cb8a4049243c08")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0acfb9f7d9692e627575ea412dd8cbd0561d88fd")]
 [assembly: System.Reflection.AssemblyProductAttribute("CommunitySafety.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CommunitySafety.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

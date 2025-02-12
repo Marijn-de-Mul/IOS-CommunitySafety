@@ -2,5 +2,5 @@
 
 public class OTPRequest
 {
-    
+    public string OTP { get; set; }
 }

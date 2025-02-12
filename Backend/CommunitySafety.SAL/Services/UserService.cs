@@ -1,6 +1,8 @@
-﻿namespace CommunitySafety.SAL.Services;
+﻿using CommunitySafety.SAL.Services.Interfaces;
 
-public class UserService
+namespace CommunitySafety.SAL.Services;
+
+public class UserService : IUserService
 {
     
 }

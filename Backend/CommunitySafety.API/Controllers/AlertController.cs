@@ -1,5 +1,8 @@
 ﻿using CommunitySafety.SAL.Models;
+using CommunitySafety.SAL.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using CommunitySafety.SAL.Services.Interfaces;
 
 namespace CommunitySafety.API.Controllers
 {
@@ -7,9 +10,17 @@ namespace CommunitySafety.API.Controllers
     [Route("api/[controller]")]
     public class AlertController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult PushAlert([FromHeader] string token, [FromBody] AlertRequest alert)
+        private readonly IAlertService _alertService;
+
+        public AlertController(IAlertService alertService)
         {
+            _alertService = alertService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PushAlert([FromHeader] string token, [FromBody] AlertRequest alert)
+        {
+            await _alertService.SendAlert(alert);
             return Ok();
         }
 

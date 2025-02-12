@@ -1,6 +1,8 @@
-﻿namespace CommunitySafety.DAL.Repositories;
+﻿using CommunitySafety.SAL.Interfaces;
 
-public class UserRepository
+namespace CommunitySafety.DAL.Repositories;
+
+public class UserRepository : IUserRepository
 {
     
 }

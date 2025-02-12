@@ -1,6 +1,8 @@
-﻿namespace CommunitySafety.SAL.Services.Interfaces;
+﻿using CommunitySafety.SAL.Models;
 
-public class IAlertService
+namespace CommunitySafety.SAL.Services.Interfaces;
+
+public interface IAlertService
 {
-    
+    public Task SendAlert(AlertRequest request);
 }

@@ -1,10 +1,9 @@
 services:
   ios_communitysafety_backend:
-    image: marijndemul16/ioscommunitysafety.backend:latest
+    image: marijndemul16/ios-communitysafety.backend:latest
     ports:
       - "3700:5000"
-    env_file:
-      - .env
+
 
   ios_communitysafety_watchtower:
     image: containrrr/watchtower

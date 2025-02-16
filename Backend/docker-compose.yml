@@ -1,0 +1,16 @@
+services:
+  ios_communitysafety_backend:
+    image: marijndemul16/ioscommunitysafety.backend:latest
+    ports:
+      - "3700:5000"
+    env_file:
+      - .env
+
+  ios_communitysafety_watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true
+    restart: unless-stopped

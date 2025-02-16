@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "DALL·E 2025-02-15 22.35.13 - A highly minimalistic and modern app icon for a community safety app. The design features a simple shield outline with a checkmark inside, symbolizing.png",
+      "filename" : "AppIcon.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "DALL·E 2025-02-15 22.35.13 - A highly minimalistic and modern app icon for a community safety app. The design features a simple shield outline with a checkmark inside, symbolizing 1.png",
+      "filename" : "AppIcon.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "DALL·E 2025-02-15 22.35.13 - A highly minimalistic and modern app icon for a community safety app. The design features a simple shield outline with a checkmark inside, symbolizing 2.png",
+      "filename" : "AppIcon.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

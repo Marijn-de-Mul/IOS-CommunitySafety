@@ -58,6 +58,15 @@ def register():
     db.session.commit()
     return jsonify(message="User registered successfully"), 201
 
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user = User.query.filter_by(username=data['username']).first()
+    if user and user.password == data['password']:
+        access_token = create_access_token(identity=user.id)
+        return jsonify(access_token=access_token), 200
+    return jsonify(message="Invalid credentials"), 401
+
 @app.route('/update_location', methods=['PUT'])
 @jwt_required()
 def update_location():
@@ -112,7 +121,7 @@ def is_within_range(user_latitude, user_longitude, alert_latitude, alert_longitu
     return distance <= severity * 3
 
 def calculate_distance(lat1, lon1, lat2, lon2):
-    R = 6371  
+    R = 6371  # Radius of the Earth in km
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
     a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2

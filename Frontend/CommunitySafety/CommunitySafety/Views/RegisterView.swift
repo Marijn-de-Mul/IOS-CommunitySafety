@@ -4,8 +4,6 @@ struct RegisterView: View {
     @Binding var isLoggedIn: Bool
     @State private var username = ""
     @State private var password = ""
-    @State private var showAlert = false
-    @State private var alertMessage = ""
 
     var body: some View {
         VStack {
@@ -31,8 +29,7 @@ struct RegisterView: View {
                     case .success(_):
                         isLoggedIn = true
                     case .failure(let error):
-                        alertMessage = error.localizedDescription
-                        showAlert = true
+                        print(error.localizedDescription)
                     }
                 }
             }) {
@@ -46,8 +43,5 @@ struct RegisterView: View {
             .padding(.horizontal)
         }
         .padding()
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Registration Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-        }
     }
 }

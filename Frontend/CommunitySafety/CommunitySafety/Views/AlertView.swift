@@ -5,8 +5,6 @@ struct AlertView: View {
     @State private var severity = 1
     @State private var title = ""
     @State private var description = ""
-    @State private var showAlert = false
-    @State private var alertMessage = ""
 
     var body: some View {
         ZStack {
@@ -81,7 +79,8 @@ struct AlertView: View {
                         }
 
                         Button(action: {
-                            sendAlert()
+                            // Implement send alert action
+                            showOverlay = false
                         }) {
                             Text("Submit")
                                 .padding()
@@ -98,22 +97,6 @@ struct AlertView: View {
                 .shadow(radius: 20)
                 .padding()
             }
-        }
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Alert"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-        }
-    }
-
-    private func sendAlert() {
-        NetworkManager.shared.sendAlert(severity: severity, title: title, description: description) { result in
-            switch result {
-            case .success:
-                alertMessage = "Alert sent successfully"
-            case .failure(let error):
-                alertMessage = "Failed to send alert: \(error.localizedDescription)"
-            }
-            showAlert = true
-            showOverlay = false
         }
     }
 }

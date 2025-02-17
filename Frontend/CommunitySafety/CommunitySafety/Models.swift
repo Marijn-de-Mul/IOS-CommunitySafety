@@ -5,11 +5,12 @@ struct User: Codable {
     let username: String
 }
 
-struct Alert: Identifiable {
-    let id: Int
+struct Alert: Codable {
+    let id: String
+    let severity: Int
+    let title: String?
+    let description: String?
     let latitude: Double
     let longitude: Double
-    let severity: Int
-    let title: String
-    let description: String
+    let timestamp: Date
 }

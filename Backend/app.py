@@ -5,6 +5,7 @@ from datetime import timedelta
 import math
 from flasgger import Swagger, swag_from
 import logging
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///community_safety.db'
@@ -28,9 +29,15 @@ def log_request_info():
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
+    password_hash = db.Column(db.String(120), nullable=False)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 class Alert(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,6 +81,7 @@ class Alert(db.Model):
 def register():
     data = request.get_json()
     username = data['username']
+    password = data['password']
     latitude = data.get('latitude')
     longitude = data.get('longitude')
 
@@ -92,7 +100,8 @@ def register():
         except ValueError:
             return jsonify(message="Invalid longitude value"), 400
 
-    new_user = User(username=username, password=data['password'], latitude=latitude, longitude=longitude)
+    new_user = User(username=username, latitude=latitude, longitude=longitude)
+    new_user.set_password(password)
     db.session.add(new_user)
     db.session.commit()
     return jsonify(message="User registered successfully"), 201
@@ -120,9 +129,11 @@ def register():
 })
 def login():
     data = request.get_json()
-    user = User.query.filter_by(username=data['username']).first()
-    if user and user.password == data['password']:
-        access_token = create_access_token(identity={'id': user.id, 'username': user.username})
+    username = data['username']
+    password = data['password']
+    user = User.query.filter_by(username=username).first()
+    if user and user.check_password(password):
+        access_token = create_access_token(identity=str(user.id))
         return jsonify(access_token=access_token), 200
     return jsonify(message="Invalid credentials"), 401
 
@@ -171,8 +182,7 @@ def update_location():
         logger.error("Invalid latitude or longitude value")
         return jsonify(message="Invalid latitude or longitude value"), 400
 
-    user_identity = get_jwt_identity()
-    user_id = user_identity['id']
+    user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user:
         logger.error("User not found")
@@ -309,8 +319,7 @@ def update_alert(alert_id):
 })
 def get_alerts():
     severity = request.args.get('severity', type=int)
-    user_identity = get_jwt_identity()
-    user_id = user_identity['id']
+    user_id = get_jwt_identity()
     user = User.query.get(user_id)
     user_latitude = user.latitude
     user_longitude = user.longitude

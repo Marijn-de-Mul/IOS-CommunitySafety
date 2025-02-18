@@ -137,6 +137,22 @@ def login():
                     'message': 'Location updated successfully'
                 }
             }
+        },
+        400: {
+            'description': 'Invalid input',
+            'examples': {
+                'application/json': {
+                    'message': 'Invalid input'
+                }
+            }
+        },
+        404: {
+            'description': 'User not found',
+            'examples': {
+                'application/json': {
+                    'message': 'User not found'
+                }
+            }
         }
     }
 })
@@ -145,22 +161,26 @@ def update_location():
     logger.info(f"Received data: {data}")
 
     if 'latitude' not in data or 'longitude' not in data:
+        logger.error("Latitude and longitude are required")
         return jsonify(message="Latitude and longitude are required"), 400
 
     try:
         latitude = float(data['latitude'])
         longitude = float(data['longitude'])
     except ValueError:
+        logger.error("Invalid latitude or longitude value")
         return jsonify(message="Invalid latitude or longitude value"), 400
 
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user:
+        logger.error("User not found")
         return jsonify(message="User not found"), 404
 
     user.latitude = latitude
     user.longitude = longitude
     db.session.commit()
+    logger.info("Location updated successfully")
     return jsonify(message="Location updated successfully"), 200
 
 @app.route('/alerts', methods=['POST'])

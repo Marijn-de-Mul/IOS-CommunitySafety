@@ -65,7 +65,22 @@ class Alert(db.Model):
 })
 def register():
     data = request.get_json()
-    new_user = User(username=data['username'], password=data['password'], latitude=data.get('latitude'), longitude=data.get('longitude'))
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
+
+    if latitude is not None:
+        try:
+            latitude = float(latitude)
+        except ValueError:
+            return jsonify(message="Invalid latitude value"), 400
+
+    if longitude is not None:
+        try:
+            longitude = float(longitude)
+        except ValueError:
+            return jsonify(message="Invalid longitude value"), 400
+
+    new_user = User(username=data['username'], password=data['password'], latitude=latitude, longitude=longitude)
     db.session.add(new_user)
     db.session.commit()
     return jsonify(message="User registered successfully"), 201

@@ -122,7 +122,7 @@ def login():
     data = request.get_json()
     user = User.query.filter_by(username=data['username']).first()
     if user and user.password == data['password']:
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity={'id': user.id, 'username': user.username})
         return jsonify(access_token=access_token), 200
     return jsonify(message="Invalid credentials"), 401
 
@@ -171,8 +171,8 @@ def update_location():
         logger.error("Invalid latitude or longitude value")
         return jsonify(message="Invalid latitude or longitude value"), 400
 
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
+    user_identity = get_jwt_identity()
+    user = User.query.get(user_identity['id'])
     if not user:
         logger.error("User not found")
         return jsonify(message="User not found"), 404
@@ -190,7 +190,7 @@ def update_location():
         return jsonify(message="Error updating location"), 500
 
 @app.route('/alerts', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 @swag_from({
     'responses': {
         201: {
@@ -308,8 +308,8 @@ def update_alert(alert_id):
 })
 def get_alerts():
     severity = request.args.get('severity', type=int)
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
+    user_identity = get_jwt_identity()
+    user = User.query.get(user_identity['id'])
     user_latitude = user.latitude
     user_longitude = user.longitude
 

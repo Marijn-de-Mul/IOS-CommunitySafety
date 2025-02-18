@@ -179,9 +179,15 @@ def update_location():
 
     user.latitude = latitude
     user.longitude = longitude
-    db.session.commit()
-    logger.info("Location updated successfully")
-    return jsonify(message="Location updated successfully"), 200
+
+    try:
+        db.session.commit()
+        logger.info("Location updated successfully")
+        return jsonify(message="Location updated successfully"), 200
+    except Exception as e:
+        logger.error(f"Error committing to the database: {e}")
+        db.session.rollback()
+        return jsonify(message="Error updating location"), 500
 
 @app.route('/alerts', methods=['POST'])
 @jwt_required()

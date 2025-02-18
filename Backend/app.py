@@ -60,13 +60,25 @@ class Alert(db.Model):
                     'message': 'User registered successfully'
                 }
             }
+        },
+        400: {
+            'description': 'Username already exists',
+            'examples': {
+                'application/json': {
+                    'message': 'Username already exists'
+                }
+            }
         }
     }
 })
 def register():
     data = request.get_json()
+    username = data['username']
     latitude = data.get('latitude')
     longitude = data.get('longitude')
+
+    if User.query.filter_by(username=username).first():
+        return jsonify(message="Username already exists"), 400
 
     if latitude is not None:
         try:
@@ -80,7 +92,7 @@ def register():
         except ValueError:
             return jsonify(message="Invalid longitude value"), 400
 
-    new_user = User(username=data['username'], password=data['password'], latitude=latitude, longitude=longitude)
+    new_user = User(username=username, password=data['password'], latitude=latitude, longitude=longitude)
     db.session.add(new_user)
     db.session.commit()
     return jsonify(message="User registered successfully"), 201

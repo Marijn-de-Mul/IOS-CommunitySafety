@@ -6,7 +6,7 @@ struct MainView: View {
     var body: some View {
         NavigationView {
             TabView {
-                AlertView()
+                CreateAlertButtonView()
                     .tabItem {
                         Label("Alert", systemImage: "exclamationmark.circle")
                     }

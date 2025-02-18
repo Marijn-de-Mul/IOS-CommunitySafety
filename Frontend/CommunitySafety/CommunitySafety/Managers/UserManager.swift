@@ -3,16 +3,14 @@ import Foundation
 class UserManager {
     static let shared = UserManager()
     private var currentUser: User?
-    private var token: String?
 
     private init() {}
 
     func login(username: String, password: String, completion: @escaping (Result<User, Error>) -> Void) {
         NetworkManager.shared.login(username: username, password: password) { result in
             switch result {
-            case .success(let (user, token)):
+            case .success(let (user, _)):
                 self.currentUser = user
-                self.token = token
                 completion(.success(user))
             case .failure(let error):
                 completion(.failure(error))
@@ -20,12 +18,11 @@ class UserManager {
         }
     }
 
-    func register(username: String, password: String, completion: @escaping (Result<User, Error>) -> Void) {
+    func register(username: String, password: String, completion: @escaping (Result<String, Error>) -> Void) { 
         NetworkManager.shared.register(username: username, password: password) { result in
             switch result {
-            case .success(let user):
-                self.currentUser = user
-                completion(.success(user))
+            case .success(let message):
+                completion(.success(message))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -34,9 +31,5 @@ class UserManager {
 
     func getCurrentUser() -> User? {
         return currentUser
-    }
-
-    func getToken() -> String? {
-        return token
     }
 }

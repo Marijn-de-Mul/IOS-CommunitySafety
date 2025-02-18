@@ -1,114 +1,102 @@
 import SwiftUI
 
 struct AlertView: View {
-    @State private var showOverlay = false
-    @State private var severity = 1
-    @State private var title = ""
-    @State private var description = ""
+    @State private var severity: Int = 1
+    @State private var title: String = ""
+    @State private var description: String = ""
+    @State private var alertMessage: String = ""
+    @State private var showAlert: Bool = false
+    @State private var showModal: Bool = false
 
     var body: some View {
-        ZStack {
-            VStack {
-                Button(action: {
-                    showOverlay = true
-                }) {
-                    Text("Send Alert")
-                        .font(.largeTitle)
-                        .padding()
-                        .frame(width: 200, height: 200)
-                        .background(Color.red)
-                        .foregroundColor(.white)
-                        .clipShape(Circle())
+        VStack {
+            Picker("Severity", selection: $severity) {
+                ForEach(1..<11) { index in
+                    Text("\(index)").tag(index)
                 }
-                .padding()
             }
+            .pickerStyle(WheelPickerStyle())
+            .padding()
 
-            if showOverlay {
-                Color.black.opacity(0.6)
-                    .edgesIgnoringSafeArea(.all)
+            TextField("Title", text: $title)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
 
-                VStack(spacing: 20) {
-                    Text("New Alert")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
+            TextField("Description", text: $description)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+
+            Button(action: {
+                showModal = true
+            }) {
+                Text("SEND ALERT")
+                    .padding()
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .cornerRadius(50)
+                    .frame(maxWidth: .infinity)
+            }
+            .padding()
+            .sheet(isPresented: $showModal) {
+                VStack {
+                    Text("Confirm Alert")
+                        .font(.headline)
+                        .padding()
 
                     Text("Severity: \(severity)")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.top)
-
-                    Picker("Severity", selection: $severity) {
-                        ForEach(1..<11) { index in
-                            Text("\(index)").tag(index)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(8)
-
-                    TextField("Title", text: $title)
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(8)
-                        .foregroundColor(.black)
-                        .placeholder(when: title.isEmpty) {
-                            Text("Title").foregroundColor(.black)
-                        }
-
-                    TextField("Description", text: $description)
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(8)
-                        .foregroundColor(.black)
-                        .placeholder(when: description.isEmpty) {
-                            Text("Description").foregroundColor(.black)
-                        }
+                    Text("Title: \(title)")
+                    Text("Description: \(description)")
 
                     HStack {
                         Button(action: {
-                            showOverlay = false
+                            showModal = false
                         }) {
                             Text("Cancel")
                                 .padding()
-                                .frame(maxWidth: .infinity)
                                 .background(Color.gray)
                                 .foregroundColor(.white)
-                                .cornerRadius(10)
+                                .cornerRadius(8)
                         }
 
                         Button(action: {
-                            // Implement send alert action
-                            showOverlay = false
+                            NetworkManager.shared.createAlert(severity: "\(severity)", title: title, description: description) { result in
+                                switch result {
+                                case .success(let message):
+                                    alertMessage = message
+                                case .failure(let error):
+                                    alertMessage = error.localizedDescription
+                                }
+                                showAlert = true
+                                showModal = false
+                            }
                         }) {
-                            Text("Submit")
+                            Text("Send")
                                 .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color.blue)
+                                .background(Color.red)
                                 .foregroundColor(.white)
-                                .cornerRadius(10)
+                                .cornerRadius(8)
                         }
                     }
+                    .padding()
                 }
                 .padding()
-                .background(Color(.systemGray4))
-                .cornerRadius(12)
-                .shadow(radius: 20)
-                .padding()
+            }
+            .alert(isPresented: $showAlert) {
+                SwiftUI.Alert(title: Text("Alert"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
+        .padding()
+        .navigationBarTitle("Create Alert", displayMode: .inline)
+        .navigationBarItems(leading: Button(action: {
+            // Action to go back
+        }) {
+            
+        })
     }
 }
 
-extension View {
-    func placeholder<Content: View>(
-        when shouldShow: Bool,
-        alignment: Alignment = .leading,
-        @ViewBuilder placeholder: () -> Content) -> some View {
-        ZStack(alignment: alignment) {
-            placeholder().opacity(shouldShow ? 1 : 0)
-            self
-        }
+struct AlertView_Previews: PreviewProvider {
+    static var previews: some View {
+        AlertView()
     }
 }

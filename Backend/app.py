@@ -190,7 +190,7 @@ def update_location():
         return jsonify(message="Error updating location"), 500
 
 @app.route('/alerts', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 @swag_from({
     'responses': {
         201: {

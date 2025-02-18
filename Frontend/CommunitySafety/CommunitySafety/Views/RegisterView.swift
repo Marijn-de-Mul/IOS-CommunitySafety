@@ -43,7 +43,7 @@ struct RegisterView: View {
             }
             .padding(.horizontal)
             .alert(isPresented: $showAlert) {
-                Alert(
+                SwiftUI.Alert(
                     title: Text("Registration Successful"),
                     message: Text("You can now login with your credentials."),
                     dismissButton: .default(Text("OK"))

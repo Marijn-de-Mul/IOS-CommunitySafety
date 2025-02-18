@@ -257,14 +257,31 @@ def create_alert():
 })
 def update_alert(alert_id):
     data = request.get_json()
+    logger.info(f"Received data: {data}")
+
+    try:
+        severity = int(data['severity'])
+        latitude = float(data['latitude'])
+        longitude = float(data['longitude'])
+    except (ValueError, KeyError) as e:
+        logger.error(f"Invalid input: {e}")
+        return jsonify(message="Invalid input"), 400
+
     alert = Alert.query.get_or_404(alert_id)
-    alert.severity = data['severity']
-    alert.latitude = data['latitude']
-    alert.longitude = data['longitude']
+    alert.severity = severity
+    alert.latitude = latitude
+    alert.longitude = longitude
     alert.title = data.get('title')
     alert.description = data.get('description')
-    db.session.commit()
-    return jsonify(message="Alert updated successfully"), 200
+
+    try:
+        db.session.commit()
+        logger.info("Alert updated successfully")
+        return jsonify(message="Alert updated successfully"), 200
+    except Exception as e:
+        logger.error(f"Error committing to the database: {e}")
+        db.session.rollback()
+        return jsonify(message="Error updating alert"), 500
 
 @app.route('/alerts', methods=['GET'])
 @jwt_required()
@@ -308,7 +325,7 @@ def is_within_range(user_latitude, user_longitude, alert_latitude, alert_longitu
     return distance <= severity * 3
 
 def calculate_distance(lat1, lon1, lat2, lon2):
-    R = 6371  # Radius of the Earth in km
+    R = 6371  
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
     a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2

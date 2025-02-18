@@ -142,10 +142,24 @@ def login():
 })
 def update_location():
     data = request.get_json()
+    logger.info(f"Received data: {data}")
+
+    if 'latitude' not in data or 'longitude' not in data:
+        return jsonify(message="Latitude and longitude are required"), 400
+
+    try:
+        latitude = float(data['latitude'])
+        longitude = float(data['longitude'])
+    except ValueError:
+        return jsonify(message="Invalid latitude or longitude value"), 400
+
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
-    user.latitude = data['latitude']
-    user.longitude = data['longitude']
+    if not user:
+        return jsonify(message="User not found"), 404
+
+    user.latitude = latitude
+    user.longitude = longitude
     db.session.commit()
     return jsonify(message="Location updated successfully"), 200
 

@@ -13,3 +13,7 @@ struct Alert: Decodable, Identifiable {
     let title: String
     let description: String
 }
+
+struct AlertsResponse: Decodable {
+    let alerts: [Alert]
+}

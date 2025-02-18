@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct CreateAlertButtonView: View {
-    @State private var showAlertView = false
+    @State private var selectedTab: Int = 0
+    @State private var showAlertView: Bool = false
 
     var body: some View {
         NavigationView {
@@ -9,19 +10,17 @@ struct CreateAlertButtonView: View {
                 Button(action: {
                     showAlertView = true
                 }) {
-                    Text("CREATE ALERT")
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
-                        .frame(width: 200, height: 200)
-                        .background(Color.red)
-                        .clipShape(Circle())
+                    Text("Send Alert")
                         .padding()
+                        .frame(width: 300, height: 300)
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .clipShape(Circle())
                 }
-                .background(
-                    NavigationLink(destination: AlertView(), isActive: $showAlertView) {
-                        EmptyView()
-                    }
-                )
+                .padding()
+                .sheet(isPresented: $showAlertView) {
+                    AlertView(selectedTab: $selectedTab)
+                }
             }
         }
     }

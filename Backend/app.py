@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 import math
-from flasgger import Swagger
+from flasgger import Swagger, swag_from
 import logging
 
 app = Flask(__name__)
@@ -51,6 +51,18 @@ class Alert(db.Model):
         }
 
 @app.route('/register', methods=['POST'])
+@swag_from({
+    'responses': {
+        201: {
+            'description': 'User registered successfully',
+            'examples': {
+                'application/json': {
+                    'message': 'User registered successfully'
+                }
+            }
+        }
+    }
+})
 def register():
     data = request.get_json()
     new_user = User(username=data['username'], password=data['password'], latitude=data.get('latitude'), longitude=data.get('longitude'))
@@ -59,6 +71,26 @@ def register():
     return jsonify(message="User registered successfully"), 201
 
 @app.route('/login', methods=['POST'])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Login successful',
+            'examples': {
+                'application/json': {
+                    'access_token': 'your_access_token'
+                }
+            }
+        },
+        401: {
+            'description': 'Invalid credentials',
+            'examples': {
+                'application/json': {
+                    'message': 'Invalid credentials'
+                }
+            }
+        }
+    }
+})
 def login():
     data = request.get_json()
     user = User.query.filter_by(username=data['username']).first()
@@ -69,6 +101,18 @@ def login():
 
 @app.route('/update_location', methods=['PUT'])
 @jwt_required()
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Location updated successfully',
+            'examples': {
+                'application/json': {
+                    'message': 'Location updated successfully'
+                }
+            }
+        }
+    }
+})
 def update_location():
     data = request.get_json()
     user_id = get_jwt_identity()
@@ -80,6 +124,18 @@ def update_location():
 
 @app.route('/alerts', methods=['POST'])
 @jwt_required()
+@swag_from({
+    'responses': {
+        201: {
+            'description': 'Alert created successfully',
+            'examples': {
+                'application/json': {
+                    'message': 'Alert created successfully'
+                }
+            }
+        }
+    }
+})
 def create_alert():
     data = request.get_json()
     new_alert = Alert(severity=data['severity'], latitude=data['latitude'], longitude=data['longitude'], title=data.get('title'), description=data.get('description'))
@@ -89,6 +145,18 @@ def create_alert():
 
 @app.route('/alerts/<int:alert_id>', methods=['PUT'])
 @jwt_required()
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Alert updated successfully',
+            'examples': {
+                'application/json': {
+                    'message': 'Alert updated successfully'
+                }
+            }
+        }
+    }
+})
 def update_alert(alert_id):
     data = request.get_json()
     alert = Alert.query.get_or_404(alert_id)
@@ -102,6 +170,27 @@ def update_alert(alert_id):
 
 @app.route('/alerts', methods=['GET'])
 @jwt_required()
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'List of alerts',
+            'examples': {
+                'application/json': {
+                    'alerts': [
+                        {
+                            'id': 1,
+                            'severity': 3,
+                            'latitude': 52.3676,
+                            'longitude': 4.9041,
+                            'title': 'Test Alert',
+                            'description': 'This is a test alert'
+                        }
+                    ]
+                }
+            }
+        }
+    }
+})
 def get_alerts():
     severity = request.args.get('severity', type=int)
     user_id = get_jwt_identity()

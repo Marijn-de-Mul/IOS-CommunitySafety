@@ -4,6 +4,7 @@ struct RegisterView: View {
     @Binding var isLoggedIn: Bool
     @State private var username = ""
     @State private var password = ""
+    @State private var showAlert = false
 
     var body: some View {
         VStack {
@@ -27,7 +28,7 @@ struct RegisterView: View {
                 UserManager.shared.register(username: username, password: password) { result in
                     switch result {
                     case .success(_):
-                        isLoggedIn = true
+                        showAlert = true
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
@@ -41,6 +42,13 @@ struct RegisterView: View {
                     .cornerRadius(10)
             }
             .padding(.horizontal)
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Registration Successful"),
+                    message: Text("You can now login with your credentials."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
         .padding()
     }

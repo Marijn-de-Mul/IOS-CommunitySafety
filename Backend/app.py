@@ -330,12 +330,46 @@ def get_alerts():
     filtered_alerts = [alert for alert in alerts if is_within_range(user_latitude, user_longitude, alert.latitude, alert.longitude, 50)]
     return jsonify(alerts=[alert.to_dict() for alert in filtered_alerts]), 200
 
+@app.route('/alerts/<int:alert_id>', methods=['DELETE'])
+@jwt_required()
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Alert deleted successfully',
+            'examples': {
+                'application/json': {
+                    'message': 'Alert deleted successfully'
+                }
+            }
+        },
+        404: {
+            'description': 'Alert not found',
+            'examples': {
+                'application/json': {
+                    'message': 'Alert not found'
+                }
+            }
+        }
+    }
+})
+def delete_alert(alert_id):
+    alert = Alert.query.get_or_404(alert_id)
+    db.session.delete(alert)
+    try:
+        db.session.commit()
+        logger.info("Alert deleted successfully")
+        return jsonify(message="Alert deleted successfully"), 200
+    except Exception as e:
+        logger.error(f"Error committing to the database: {e}")
+        db.session.rollback()
+        return jsonify(message="Error deleting alert"), 500
+
 def is_within_range(user_latitude, user_longitude, alert_latitude, alert_longitude, radius_km):
     distance = calculate_distance(user_latitude, user_longitude, alert_latitude, alert_longitude)
     return distance <= radius_km
 
 def calculate_distance(lat1, lon1, lat2, lon2):
-    R = 6371  
+    R = 6371  # Radius of the Earth in km
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
     a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2

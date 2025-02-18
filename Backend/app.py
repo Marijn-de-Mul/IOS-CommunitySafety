@@ -200,15 +200,46 @@ def update_location():
                     'message': 'Alert created successfully'
                 }
             }
+        },
+        400: {
+            'description': 'Invalid input',
+            'examples': {
+                'application/json': {
+                    'message': 'Invalid input'
+                }
+            }
         }
     }
 })
 def create_alert():
     data = request.get_json()
-    new_alert = Alert(severity=data['severity'], latitude=data['latitude'], longitude=data['longitude'], title=data.get('title'), description=data.get('description'))
+    logger.info(f"Received data: {data}")
+
+    try:
+        severity = int(data['severity'])
+        latitude = float(data['latitude'])
+        longitude = float(data['longitude'])
+    except (ValueError, KeyError) as e:
+        logger.error(f"Invalid input: {e}")
+        return jsonify(message="Invalid input"), 400
+
+    new_alert = Alert(
+        severity=severity,
+        latitude=latitude,
+        longitude=longitude,
+        title=data.get('title'),
+        description=data.get('description')
+    )
+
     db.session.add(new_alert)
-    db.session.commit()
-    return jsonify(message="Alert created successfully"), 201
+    try:
+        db.session.commit()
+        logger.info("Alert created successfully")
+        return jsonify(message="Alert created successfully"), 201
+    except Exception as e:
+        logger.error(f"Error committing to the database: {e}")
+        db.session.rollback()
+        return jsonify(message="Error creating alert"), 500
 
 @app.route('/alerts/<int:alert_id>', methods=['PUT'])
 @jwt_required()

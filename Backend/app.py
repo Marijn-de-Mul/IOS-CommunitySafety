@@ -318,7 +318,6 @@ def update_alert(alert_id):
     }
 })
 def get_alerts():
-    severity = request.args.get('severity', type=int)
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     user_latitude = user.latitude
@@ -327,16 +326,16 @@ def get_alerts():
     if user_latitude is None or user_longitude is None:
         return jsonify(message="User location not set"), 400
 
-    alerts = Alert.query.filter_by(severity=severity).all()
-    filtered_alerts = [alert for alert in alerts if is_within_range(user_latitude, user_longitude, alert.latitude, alert.longitude, severity)]
+    alerts = Alert.query.all()
+    filtered_alerts = [alert for alert in alerts if is_within_range(user_latitude, user_longitude, alert.latitude, alert.longitude, 50)]
     return jsonify(alerts=[alert.to_dict() for alert in filtered_alerts]), 200
 
-def is_within_range(user_latitude, user_longitude, alert_latitude, alert_longitude, severity):
+def is_within_range(user_latitude, user_longitude, alert_latitude, alert_longitude, radius_km):
     distance = calculate_distance(user_latitude, user_longitude, alert_latitude, alert_longitude)
-    return distance <= severity * 3
+    return distance <= radius_km
 
 def calculate_distance(lat1, lon1, lat2, lon2):
-    R = 6371  # Radius of the Earth in km
+    R = 6371  
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
     a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2

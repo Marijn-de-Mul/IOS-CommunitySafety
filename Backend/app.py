@@ -172,7 +172,8 @@ def update_location():
         return jsonify(message="Invalid latitude or longitude value"), 400
 
     user_identity = get_jwt_identity()
-    user = User.query.get(user_identity['id'])
+    user_id = user_identity['id']
+    user = User.query.get(user_id)
     if not user:
         logger.error("User not found")
         return jsonify(message="User not found"), 404
@@ -309,7 +310,8 @@ def update_alert(alert_id):
 def get_alerts():
     severity = request.args.get('severity', type=int)
     user_identity = get_jwt_identity()
-    user = User.query.get(user_identity['id'])
+    user_id = user_identity['id']
+    user = User.query.get(user_id)
     user_latitude = user.latitude
     user_longitude = user.longitude
 
@@ -325,7 +327,7 @@ def is_within_range(user_latitude, user_longitude, alert_latitude, alert_longitu
     return distance <= severity * 3
 
 def calculate_distance(lat1, lon1, lat2, lon2):
-    R = 6371  
+    R = 6371  # Radius of the Earth in km
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
     a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2

@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct RegisterView: View {
-    @Binding var isLoggedIn: Bool
     @State private var username = ""
     @State private var password = ""
     @State private var showAlert = false

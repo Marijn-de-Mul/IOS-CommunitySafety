@@ -42,7 +42,7 @@ struct LoginView: View {
             }
             .padding(.horizontal)
 
-            NavigationLink(destination: RegisterView(isLoggedIn: $isLoggedIn)) {
+            NavigationLink(destination: RegisterView()) {
                 Text("Register")
                     .padding()
                     .frame(maxWidth: .infinity)

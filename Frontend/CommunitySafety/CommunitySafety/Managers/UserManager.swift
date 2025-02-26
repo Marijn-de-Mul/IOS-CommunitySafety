@@ -1,8 +1,9 @@
 import Foundation
+import Combine
 
-class UserManager {
+class UserManager: ObservableObject {
     static let shared = UserManager()
-    private var currentUser: User?
+    @Published var currentUser: User?
 
     private init() {}
 
@@ -10,7 +11,9 @@ class UserManager {
         NetworkManager.shared.login(username: username, password: password) { result in
             switch result {
             case .success(let (user, _)):
-                self.currentUser = user
+                DispatchQueue.main.async {
+                    self.currentUser = user
+                }
                 completion(.success(user))
             case .failure(let error):
                 completion(.failure(error))
@@ -26,6 +29,12 @@ class UserManager {
             case .failure(let error):
                 completion(.failure(error))
             }
+        }
+    }
+    
+    func logout() {
+        DispatchQueue.main.async {
+            self.currentUser = nil
         }
     }
 

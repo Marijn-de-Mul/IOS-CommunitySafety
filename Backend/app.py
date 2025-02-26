@@ -200,6 +200,36 @@ def update_location():
         db.session.rollback()
         return jsonify(message="Error updating location"), 500
 
+@app.route('/checkToken', methods=['GET'])
+@jwt_required()
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Token is valid',
+            'examples': {
+                'application/json': {
+                    'message': 'Token is valid',
+                    'user_id': 1
+                }
+            }
+        },
+        401: {
+            'description': 'Invalid token',
+            'examples': {
+                'application/json': {
+                    'message': 'Invalid token'
+                }
+            }
+        }
+    }
+})
+def check_token():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if user:
+        return jsonify(message="Token is valid", user_id=user.id), 200
+    return jsonify(message="Invalid token"), 401
+
 @app.route('/alerts', methods=['POST'])
 @jwt_required()
 @swag_from({
@@ -295,7 +325,6 @@ def update_alert(alert_id):
         return jsonify(message="Error updating alert"), 500
 
 @app.route('/alerts', methods=['GET'])
-@jwt_required()
 @swag_from({
     'responses': {
         200: {
@@ -318,17 +347,8 @@ def update_alert(alert_id):
     }
 })
 def get_alerts():
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    user_latitude = user.latitude
-    user_longitude = user.longitude
-
-    if user_latitude is None or user_longitude is None:
-        return jsonify(message="User location not set"), 400
-
     alerts = Alert.query.all()
-    filtered_alerts = [alert for alert in alerts if is_within_range(user_latitude, user_longitude, alert.latitude, alert.longitude, 50)]
-    return jsonify(alerts=[alert.to_dict() for alert in filtered_alerts]), 200
+    return jsonify(alerts=[alert.to_dict() for alert in alerts]), 200
 
 @app.route('/alerts/<int:alert_id>', methods=['DELETE'])
 @jwt_required()

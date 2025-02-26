@@ -209,7 +209,12 @@ def update_location():
             'examples': {
                 'application/json': {
                     'message': 'Token is valid',
-                    'user_id': 1
+                    'user': {
+                        'id': 1,
+                        'username': 'example_user',
+                        'latitude': 52.3676,
+                        'longitude': 4.9041
+                    }
                 }
             }
         },
@@ -227,7 +232,13 @@ def check_token():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if user:
-        return jsonify(message="Token is valid", user_id=user.id), 200
+        user_data = {
+            'id': user.id,
+            'username': user.username,
+            'latitude': user.latitude,
+            'longitude': user.longitude
+        }
+        return jsonify(message="Token is valid", user=user_data), 200
     return jsonify(message="Invalid token"), 401
 
 @app.route('/alerts', methods=['POST'])

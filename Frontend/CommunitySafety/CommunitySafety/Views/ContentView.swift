@@ -2,10 +2,15 @@ import SwiftUI
 
 @main
 struct CommunitySafetyApp: App {
-    var body: some Scene {
+    @ObservedObject var userManager = UserManager.shared
+    
+    init() {
+        userManager.checkTokenValidity()
+    }
         
+    var body: some Scene {
         WindowGroup {
-            MainView(isLoggedIn: false)
+            MainView()
         }
     }
 }

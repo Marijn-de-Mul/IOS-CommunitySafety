@@ -1,16 +1,37 @@
 import SwiftUI
 
 struct SideMenuView: View {
-    @Binding var isLoggedIn: Bool
     @Binding var isMenuOpen: Bool
+    @ObservedObject var userManager: UserManager
+    @State private var alerts: [Alert] = []
+    private let timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
 
     var body: some View {
         GeometryReader { geometry in
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
                     Spacer()
-                    NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn)) {
-                        Text("Login/Register")
+                    if userManager.currentUser != nil {
+                        Button(action: {
+                            userManager.logout()
+                        }) {
+                            Text("Logout")
+                                .foregroundColor(.white)
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 20)
+                        }
+                    } else {
+                        NavigationLink(destination: LoginView(isLoggedIn: $userManager.isLoggedIn)) {
+                            Text("Login/Register")
+                                .foregroundColor(.white)
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 20)
+                        }
+                    }
+                    Divider()
+                        .background(Color.white)
+                    NavigationLink(destination: AlertListView(alerts: $alerts)) {
+                        Text("Alert List")
                             .foregroundColor(.white)
                             .padding(.vertical, 10)
                             .padding(.horizontal, 20)
@@ -54,5 +75,24 @@ struct SideMenuView: View {
             })
         }
         .edgesIgnoringSafeArea(.all)
+        .onAppear {
+            fetchAlerts()
+        }
+        .onReceive(timer) { _ in
+            fetchAlerts()
+        }
+    }
+
+    private func fetchAlerts() {
+        NetworkManager.shared.getAlerts { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let alerts):
+                    self.alerts = alerts
+                case .failure(let error):
+                    print("Error fetching alerts: \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }

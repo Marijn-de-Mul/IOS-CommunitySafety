@@ -40,19 +40,14 @@ struct MapView: UIViewRepresentable {
             }
 
             let identifier = "alertPin"
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? CustomAnnotationView
+            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
 
             if annotationView == nil {
-                annotationView = CustomAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+                annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                 annotationView?.canShowCallout = true
+                annotationView?.markerTintColor = .red
             } else {
                 annotationView?.annotation = annotation
-            }
-
-            if let title = annotation.title ?? nil, let systemImage = UIImage(systemName: title) {
-                let imageView = UIImageView(image: systemImage)
-                imageView.frame = CGRect(x: 5, y: 5, width: 30, height: 30)
-                annotationView?.addSubview(imageView)
             }
 
             return annotationView
@@ -63,53 +58,4 @@ struct MapView: UIViewRepresentable {
             userLocationView?.image = UIImage(named: "blue_circle")
         }
     }
-}
-
-class CustomAnnotationView: MKAnnotationView {
-    override var annotation: MKAnnotation? {
-        willSet {
-            guard let annotation = newValue else { return }
-            let size = CGSize(width: 40, height: 60)
-            self.image = drawCustomPinImage(size: size)
-            self.centerOffset = CGPoint(x: 0, y: -size.height / 2)
-        }
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        if selected {
-            self.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-        } else {
-            self.transform = CGAffineTransform.identity
-        }
-    }
-}
-
-func drawCustomPinImage(size: CGSize) -> UIImage {
-    UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
-    let context = UIGraphicsGetCurrentContext()!
-
-    context.setFillColor(UIColor.red.cgColor)
-    context.move(to: CGPoint(x: size.width / 2, y: size.height))
-    context.addCurve(to: CGPoint(x: 0, y: size.height / 2),
-                     control1: CGPoint(x: size.width / 2, y: size.height - 10),
-                     control2: CGPoint(x: 0, y: size.height / 2 + 10))
-    context.addArc(center: CGPoint(x: size.width / 2, y: size.height / 2),
-                   radius: size.width / 2,
-                   startAngle: CGFloat.pi,
-                   endAngle: 0,
-                   clockwise: false)
-    context.addCurve(to: CGPoint(x: size.width / 2, y: size.height),
-                     control1: CGPoint(x: size.width, y: size.height / 2 + 10),
-                     control2: CGPoint(x: size.width / 2, y: size.height - 10))
-    context.closePath()
-    context.fillPath()
-
-    context.setFillColor(UIColor.white.cgColor)
-    context.addEllipse(in: CGRect(x: size.width / 4, y: size.height / 4, width: size.width / 2, height: size.width / 2))
-    context.fillPath()
-
-    let image = UIGraphicsGetImageFromCurrentImageContext()!
-    UIGraphicsEndImageContext()
-    return image
 }

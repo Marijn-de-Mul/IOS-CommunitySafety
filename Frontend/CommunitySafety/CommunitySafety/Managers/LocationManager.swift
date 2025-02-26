@@ -18,6 +18,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         location = locations.first
     }
 
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed to get location: \(error.localizedDescription)")
+    }
+
     func getLocation(completion: @escaping (CLLocation?) -> Void) {
         if let location = location {
             completion(location)

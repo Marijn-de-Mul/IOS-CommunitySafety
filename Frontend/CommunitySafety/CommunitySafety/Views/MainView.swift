@@ -1,7 +1,7 @@
 import SwiftUI
+import CoreLocation
 
 struct MainView: View {
-    @State private var isLoggedIn: Bool
     @State private var isMenuOpen = false
     @State private var showAlert = false
     @State private var showSheet = false
@@ -10,10 +10,7 @@ struct MainView: View {
     @State private var alerts: [Alert] = []
     @State private var showLoginAlert = false
     @ObservedObject private var userManager = UserManager.shared
-
-    init(isLoggedIn: Bool) {
-        self._isLoggedIn = State(initialValue: isLoggedIn)
-    }
+    private let timer = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
 
     var body: some View {
         NavigationView {
@@ -40,13 +37,38 @@ struct MainView: View {
                                 isMenuOpen.toggle()
                             }
                         }
-                    SideMenuView(isMenuOpen: $isMenuOpen)
-                        .zIndex(1)
+                    SideMenuView(isMenuOpen: $isMenuOpen, userManager: userManager)
                 }
 
                 if showCustomAlert {
                     CustomAlertView(alert: selectedAlert ?? "", showCustomAlert: $showCustomAlert)
-                        .zIndex(2)
+                }
+            }
+            .colorScheme(.dark)
+            .onAppear {
+                fetchAlerts()
+            }
+            .onReceive(timer) { _ in
+                fetchAlerts()
+                LocationManager.shared.getLocation { location in
+                    guard let location = location else {
+                        print("Failed to get location")
+                        return
+                    }
+                    NetworkManager.shared.updateLocation(location: location)
+                }
+            }
+        }
+    }
+
+    private func fetchAlerts() {
+        NetworkManager.shared.getAlerts { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let alerts):
+                    self.alerts = alerts
+                case .failure(let error):
+                    print("Error fetching alerts: \(error.localizedDescription)")
                 }
             }
         }

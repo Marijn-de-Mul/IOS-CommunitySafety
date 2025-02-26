@@ -1,8 +1,10 @@
 import Foundation
 
 struct User: Codable {
-    let id: String
+    let id: Int
     let username: String
+    let longitude: Double
+    let latitude: Double
 }
 
 struct Alert: Decodable, Identifiable {
@@ -16,4 +18,9 @@ struct Alert: Decodable, Identifiable {
 
 struct AlertsResponse: Decodable {
     let alerts: [Alert]
+}
+
+struct CheckTokenResponse: Codable {
+    let message: String
+    let user: User
 }

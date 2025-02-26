@@ -8,6 +8,51 @@ class NetworkManager {
     private var sentAlerts: Set<String> = []
 
     private init() {}
+    
+    func checkToken(completion: @escaping (Result<User, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/checkToken") else {
+            completion(.failure(NSError(domain: "", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
+            return
+        }
+    
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        guard let token = getToken() else {
+            completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token available"])))
+            return
+        }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+    
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])))
+                return
+            }
+    
+            if httpResponse.statusCode == 401 {
+                completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "Unauthorized"])))
+                return
+            }
+    
+            if let data = data {
+                do {
+                    print(String(data: data, encoding: .utf8)!)
+                    let responseObject = try JSONDecoder().decode(CheckTokenResponse.self, from: data)
+                    completion(.success(responseObject.user))
+                } catch {
+                    completion(.failure(NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: "Failed to parse user"])))
+                }
+            } else {
+                completion(.failure(NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
+            }
+        }
+        task.resume()
+    }
 
     func login(username: String, password: String, completion: @escaping (Result<(User, String), Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/login") else {
@@ -36,7 +81,7 @@ class NetworkManager {
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let token = json["access_token"] as? String {
-                    let user = User(id: UUID().uuidString, username: username)
+                    let user = User(id: Int(UUID().uuidString) ?? 0, username: username, longitude: 0, latitude: 0)
                     KeychainHelper.shared.saveToken(token, forKey: tokenKey)
                     completion(.success((user, token)))
                 } else {
@@ -127,10 +172,6 @@ class NetworkManager {
         task.resume()
     }
 
-    func getToken() -> String? {
-        return KeychainHelper.shared.getToken(forKey: tokenKey)
-    }
-
     func createAlert(severity: String, title: String?, description: String?, completion: @escaping (Result<String, Error>) -> Void) {
         LocationManager.shared.getLocation { location in
             guard let location = location else {
@@ -145,7 +186,6 @@ class NetworkManager {
 
             let alertIdentifier = "\(severity)-\(title ?? "")-\(description ?? "")"
 
-            // Check if the alert has already been sent
             guard !self.sentAlerts.contains(alertIdentifier) else {
                 completion(.failure(NSError(domain: "", code: 400, userInfo: [NSLocalizedDescriptionKey: "This alert has already been sent."])))
                 return
@@ -182,7 +222,6 @@ class NetworkManager {
                     return
                 }
 
-                // Add the alert identifier to the set after successful request
                 self.sentAlerts.insert(alertIdentifier)
                 completion(.success("Alert created successfully"))
             }
@@ -199,7 +238,6 @@ class NetworkManager {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("Bearer \(getToken() ?? "")", forHTTPHeaderField: "Authorization")
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -254,5 +292,9 @@ class NetworkManager {
             completion(.success(()))
         }
         task.resume()
+    }
+    
+    func getToken() -> String? {
+        return KeychainHelper.shared.getToken(forKey: tokenKey)
     }
 }

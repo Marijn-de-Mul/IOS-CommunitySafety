@@ -81,7 +81,7 @@ struct AlertSheetView: View {
         showCustomAlert = true
         showSheet = false
         if let location = locationManager.location {
-            let description = "Type: \(alert.1), Severity: \(alert.2)"
+            let description = "Type: \(alert.1), Severity: \(alert.2), Time & Date: \(formattedCurrentDateTime())"
             let newAlert = Alert(id: UUID().hashValue, severity: alert.2, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, title: alert.1, description: description)
             alerts.append(newAlert)
             NetworkManager.shared.createAlert(severity: "\(alert.2)", title: alert.1, description: description) { result in
@@ -93,5 +93,12 @@ struct AlertSheetView: View {
                 }
             }
         }
+    }
+    
+    private func formattedCurrentDateTime() -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .medium
+        return formatter.string(from: Date())
     }
 }

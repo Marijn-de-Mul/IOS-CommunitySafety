@@ -81,6 +81,7 @@ struct SideMenuView: View {
         .onReceive(timer) { _ in
             fetchAlerts()
         }
+        .environmentObject(userManager)
     }
 
     private func fetchAlerts() {

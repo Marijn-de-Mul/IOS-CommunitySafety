@@ -35,6 +35,7 @@ class UserManager: ObservableObject {
     }
     
     func logout() {
+        KeychainHelper.shared.logout(forKey: "loginToken")
         DispatchQueue.main.async {
             self.currentUser = nil
             self.isLoggedIn = false

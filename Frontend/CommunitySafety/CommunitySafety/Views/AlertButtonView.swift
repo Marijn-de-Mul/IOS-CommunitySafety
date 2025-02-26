@@ -27,7 +27,11 @@ struct AlertButtonView: View {
             }
             .padding()
             .alert(isPresented: $showLoginAlert) {
-                SwiftUI.Alert(title: Text("Login Required"), message: Text("Please login to send alerts."), dismissButton: .default(Text("OK")))
+                SwiftUI.Alert(
+                    title: Text("Login Required"),
+                    message: Text("Please login to send alerts."),
+                    dismissButton: .default(Text("OK"))
+                )
             }
         }
     }

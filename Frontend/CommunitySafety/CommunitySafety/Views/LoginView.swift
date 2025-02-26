@@ -4,6 +4,8 @@ struct LoginView: View {
     @Binding var isLoggedIn: Bool
     @State private var username = ""
     @State private var password = ""
+    @State private var showAlert = false
+    @State private var alertMessage = ""
 
     var body: some View {
         ZStack {
@@ -32,7 +34,8 @@ struct LoginView: View {
                         case .success(_):
                             isLoggedIn = true
                         case .failure(let error):
-                            print(error.localizedDescription)
+                            alertMessage = error.localizedDescription
+                            showAlert = true
                         }
                     }
                 }) {
@@ -58,5 +61,8 @@ struct LoginView: View {
             .padding()
         }
         .colorScheme(.dark)
+        .alert(isPresented: $showAlert) {
+            SwiftUI.Alert(title: Text("Login Failed"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
     }
 }

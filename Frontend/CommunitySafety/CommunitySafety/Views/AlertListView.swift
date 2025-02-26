@@ -2,6 +2,8 @@ import SwiftUI
 
 struct AlertListView: View {
     @Binding var alerts: [Alert]
+    @ObservedObject private var userManager = UserManager.shared
+    @State private var showAlert = false
 
     var body: some View {
         NavigationView {
@@ -22,11 +24,23 @@ struct AlertListView: View {
             .navigationBarTitle("Alerts")
             .navigationBarItems(trailing: EditButton())
             .background(Color.black)
+            .alert(isPresented: $showAlert) {
+                SwiftUI.Alert(
+                    title: Text("Not Logged In"),
+                    message: Text("You cannot delete alerts when not logged in."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
         .colorScheme(.dark)
     }
 
     private func deleteAlert(at offsets: IndexSet) {
+        guard userManager.isLoggedIn else {
+            showAlert = true
+            return
+        }
+
         offsets.forEach { index in
             let alert = alerts[index]
             NetworkManager.shared.deleteAlert(String(alert.id)) { result in
@@ -40,5 +54,12 @@ struct AlertListView: View {
                 }
             }
         }
+    }
+
+    private func formattedCurrentDateTime() -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .medium
+        return formatter.string(from: Date())
     }
 }
